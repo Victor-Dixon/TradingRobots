@@ -15,6 +15,7 @@ Build a momentum-focused trading bot that can be validated in deterministic phas
 - E2E phased plan flow: [`tests/test_e2e_phased_plan.py`](tests/test_e2e_phased_plan.py)
 - Architect mocked package: [`tests/test_mock_care_package.py`](tests/test_mock_care_package.py)
 - CI phase status + handoff prompt tests: [`tests/test_phase_status.py`](tests/test_phase_status.py)
+- Phase-6 handoff coverage tests: [`tests/test_phase6_handoff_coverage.py`](tests/test_phase6_handoff_coverage.py)
 
 All completed tests listed below are required to remain passing and are executed by `ci/run_tests.sh`. The same gate also reports the current SSOT phase, rewrites `NEXT_AGENT_PROMPT.md` each run, and enforces fresh prompt metadata (`Generated at`, `Git SHA`, `Workflow ID`) to prevent stale handoff files.
 
@@ -128,6 +129,23 @@ All completed tests listed below are required to remain passing and are executed
 - ✅ `test_d_stale_data_panic_emergency_closes` (`tests/test_mock_care_package.py`)
 - ✅ `test_branch_coverage_for_is_shawn_setup` (`tests/test_mock_care_package.py`)
 
+### Phase 6 — Test Coverage Improvement (Integration + UX Edge Cases + E2E)
+**Objective**
+- Improve quality and confidence of next-agent workflow behavior through targeted coverage expansion.
+
+**DoD thresholds**
+- Integration test validates generated prompt includes fresh metadata and process steps.
+- UX edge-case test validates prompt instructions always include:
+  - read the handoff prompt first,
+  - complete one scoped task,
+  - set up next-day handoff.
+- E2E test validates `report_ci_phase_status` writes a prompt file that passes freshness checks.
+
+**Required tests to pass (TDD gate)**
+- ✅ `test_phase_6_prompt_contains_required_process_steps` (`tests/test_phase6_handoff_coverage.py`)
+- ✅ `test_phase_6_integration_prompt_write_and_freshness` (`tests/test_phase6_handoff_coverage.py`)
+- ✅ `test_phase_6_e2e_report_ci_phase_status_writes_fresh_prompt` (`tests/test_phase6_handoff_coverage.py`)
+
 ## Cross-Phase Integration and E2E Coverage
 - ✅ `test_integration_all_phase_gates_pass` (`tests/test_integration_phase_gates.py`)
 - ✅ `test_integration_fails_fast_when_any_phase_gate_fails` (`tests/test_integration_phase_gates.py`)
@@ -138,6 +156,9 @@ All completed tests listed below are required to remain passing and are executed
 - ✅ `test_validate_prompt_freshness_accepts_recent_matching_metadata` (`tests/test_phase_status.py`)
 - ✅ `test_validate_prompt_freshness_rejects_stale_prompt` (`tests/test_phase_status.py`)
 - ✅ `test_validate_prompt_freshness_rejects_git_sha_mismatch` (`tests/test_phase_status.py`)
+- ✅ `test_phase_6_prompt_contains_required_process_steps` (`tests/test_phase6_handoff_coverage.py`)
+- ✅ `test_phase_6_integration_prompt_write_and_freshness` (`tests/test_phase6_handoff_coverage.py`)
+- ✅ `test_phase_6_e2e_report_ci_phase_status_writes_fresh_prompt` (`tests/test_phase6_handoff_coverage.py`)
 
 ## Test Command
 Run all unit + integration + e2e DoD tests:

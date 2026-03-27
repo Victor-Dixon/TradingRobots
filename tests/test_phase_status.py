@@ -49,8 +49,11 @@ class TestPhaseStatus(unittest.TestCase):
             git_sha="abc1234",
             workflow_id="workflow-1",
         )
-        self.assertIn("Current completed phase: Phase 5", prompt)
+        self.assertIn(f"Current completed phase: Phase {len(PHASE_ORDER)}", prompt)
         self.assertIn("Target next phase: Maintenance", prompt)
+        self.assertIn("Read NEXT_AGENT_PROMPT.md before coding", prompt)
+        self.assertIn("Complete one scoped task", prompt)
+        self.assertIn("Set up the next day handoff", prompt)
 
     def test_write_next_agent_prompt_persists_expected_text(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
