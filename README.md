@@ -4,6 +4,8 @@ Version: **1.0.0-MVP**
 
 This README is the **project SSOT** for architecture, safety rails, and Definition of Done.
 
+Detailed phased delivery requirements and the test gate matrix live in `PRD.md` and must stay aligned with this README.
+
 ## Strategy Overview
 Catena-Bot targets momentum scalps by combining:
 - VWAP compression/breakout behavior
@@ -37,6 +39,11 @@ Catena-Bot targets momentum scalps by combining:
 Validation logic is codified in:
 - `catena_bot/validators.py`
 - `tests/test_validators.py`
+- `PRD.md` (phase-by-phase required test gates)
+
+For each phase, both happy-path and boundary/failure tests must pass before marking the phase complete.
+
+`ci/run_tests.sh` is the release gate and runs unit, integration, and e2e tests that map to the phased DoD plan.
 
 ## Data Scraper (Phase 1)
 `data_downloader.py` is the active scraper.
@@ -70,6 +77,6 @@ cd ci
 ## Definition of Done (DoD)
 A phase is done only when:
 - Code is modular and symbol-swappable via one argument.
-- Validation tests are passing.
+- Validation tests for that phase (as listed in `PRD.md`) are passing.
 - Bot decisions are loggable to `bot_history.log` in runtime layers.
 - Error handling and reconnect logic are covered before live capital.

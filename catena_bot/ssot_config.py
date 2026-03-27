@@ -19,6 +19,7 @@ class CatenaSSOT:
     phase_1_max_drawdown: float = 0.15
     phase_1_min_sharpe: float = 1.5
     phase_2_max_latency_seconds: float = 2.0
+    phase_3_max_dist_to_vwap: float = 0.002
     phase_4_daily_loss_limit_pct: float = 0.02
     phase_4_stale_data_seconds: int = 5
     phase_4_reentry_cooldown_minutes: int = 30

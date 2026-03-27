@@ -51,7 +51,9 @@ def validate_phase_2_execution_latency(
 def validate_phase_3_shawn_logic_filter(trade_history: Iterable[Mapping[str, float]]) -> bool:
     for trade in trade_history:
         assert trade["stock_rel_strength"] > trade["market_momentum"], "Bot entered a weak stock."
-        assert trade["dist_to_vwap"] < 0.002, "Bot entered a chasing trade (not compressed)."
+        assert (
+            trade["dist_to_vwap"] < SSOT.phase_3_max_dist_to_vwap
+        ), "Bot entered a chasing trade (not compressed)."
     return True
 
 
