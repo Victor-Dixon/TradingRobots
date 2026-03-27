@@ -1,0 +1,36 @@
+name: CD
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  deliver-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run release gate tests
+        run: ./ci/run_tests.sh
+
+      - name: Build delivery bundle
+        run: |
+          tar --exclude=.git -czf catena-bot-${{ github.sha }}.tar.gz .
+
+      - name: Upload delivery artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: catena-bot-delivery-${{ github.sha }}
+          path: catena-bot-${{ github.sha }}.tar.gz

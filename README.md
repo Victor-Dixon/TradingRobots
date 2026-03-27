@@ -10,6 +10,9 @@ Detailed phased delivery requirements and the test gate matrix live in `PRD.md` 
 ## Project Structure (ASCII SSOT)
 ```text
 TradingRobots/
+├── .github/workflows/
+│   ├── ci.yml                     # CI gate (LOC guard + phased tests)
+│   └── cd.yml                     # CD artifact delivery workflow
 ├── catena_bot/                     # Primary Catena-Bot logic (SSOT code location)
 │   ├── __init__.py
 │   ├── ssot_config.py              # Central thresholds/config constants
@@ -109,6 +112,15 @@ python -m catena_bot.data_downloader --ticker TSLA --nq-symbol QQQ --days 30
 cd ci
 ./run_tests.sh
 ```
+
+## CI/CD
+- CI is defined in `.github/workflows/ci.yml` and runs:
+  - dependency install,
+  - Python LOC guard (`< 400` lines),
+  - phased release gate via `./ci/run_tests.sh`.
+- CD is defined in `.github/workflows/cd.yml` and runs on release/manual dispatch:
+  - full phased release gate tests,
+  - build + upload of a delivery artifact tarball.
 
 ## Definition of Done (DoD)
 A phase is done only when:

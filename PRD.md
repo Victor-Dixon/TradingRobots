@@ -113,3 +113,11 @@ Run all unit + integration + e2e DoD tests:
 cd ci
 ./run_tests.sh
 ```
+
+## CI/CD Gate
+- CI workflow: `.github/workflows/ci.yml`
+  - Runs dependency installation.
+  - Enforces Python LOC `< 400`.
+  - Executes `./ci/run_tests.sh` as the merge gate.
+- CD workflow: `.github/workflows/cd.yml`
+  - Executes the same phased gate prior to artifact delivery.
