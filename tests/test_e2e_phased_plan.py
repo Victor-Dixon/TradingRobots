@@ -9,6 +9,7 @@ from catena_bot.validators import (
     ConnectionState,
     validate_phase_1_backtest,
     validate_phase_2_execution_latency,
+    validate_phase_2_live_readiness,
     validate_phase_3_shawn_logic_filter,
     validate_phase_4_safety_checks,
 )
@@ -20,6 +21,11 @@ def run_phased_gate_pipeline(
     order_logs: list[dict[str, datetime]],
     broker_connection: ConnectionState,
     futures_stream: ConnectionState,
+    connected_uptime_minutes: int,
+    heartbeat_gap_seconds: int,
+    vwap_delta_pct: float,
+    kill_switch_close_ms: int,
+    phase_1_import_ok: bool,
     trade_history: list[dict[str, float]],
     daily_pnl_pct: float,
     seconds_since_last_tick: int,
@@ -34,6 +40,13 @@ def run_phased_gate_pipeline(
     return (
         validate_phase_1_backtest(strategy_results)
         and validate_phase_2_execution_latency(order_logs, broker_connection, futures_stream)
+        and validate_phase_2_live_readiness(
+            connected_uptime_minutes=connected_uptime_minutes,
+            heartbeat_gap_seconds=heartbeat_gap_seconds,
+            vwap_delta_pct=vwap_delta_pct,
+            kill_switch_close_ms=kill_switch_close_ms,
+            phase_1_import_ok=phase_1_import_ok,
+        )
         and validate_phase_3_shawn_logic_filter(trade_history)
         and validate_phase_4_safety_checks(
             daily_pnl_pct,
@@ -61,6 +74,11 @@ class TestE2EPhasedPlan(unittest.TestCase):
                 order_logs=[{"signal_at": now, "filled_at": now + timedelta(milliseconds=600)}],
                 broker_connection=ConnectionState(active=True, receiving=True),
                 futures_stream=ConnectionState(active=True, receiving=True),
+                connected_uptime_minutes=60,
+                heartbeat_gap_seconds=2,
+                vwap_delta_pct=0.00005,
+                kill_switch_close_ms=250,
+                phase_1_import_ok=True,
                 trade_history=[
                     {"stock_rel_strength": 1.2, "market_momentum": 0.8, "dist_to_vwap": 0.0015}
                 ],
@@ -87,6 +105,11 @@ class TestE2EPhasedPlan(unittest.TestCase):
                 order_logs=[{"signal_at": now, "filled_at": now + timedelta(milliseconds=600)}],
                 broker_connection=ConnectionState(active=True, receiving=True),
                 futures_stream=ConnectionState(active=True, receiving=True),
+                connected_uptime_minutes=60,
+                heartbeat_gap_seconds=2,
+                vwap_delta_pct=0.00005,
+                kill_switch_close_ms=250,
+                phase_1_import_ok=True,
                 trade_history=[
                     {"stock_rel_strength": 1.2, "market_momentum": 0.8, "dist_to_vwap": 0.0015}
                 ],

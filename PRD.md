@@ -9,6 +9,7 @@ Build a momentum-focused trading bot that can be validated in deterministic phas
 
 ## Test Navigation Index (Phase -> Test File)
 - Unit DoD gates: [`tests/test_validators.py`](tests/test_validators.py)
+- Phase-2 live engine unit tests: [`tests/test_live_engine.py`](tests/test_live_engine.py)
 - Integration phased gates: [`tests/test_integration_phase_gates.py`](tests/test_integration_phase_gates.py)
 - E2E phased plan flow: [`tests/test_e2e_phased_plan.py`](tests/test_e2e_phased_plan.py)
 
@@ -39,14 +40,25 @@ All completed tests listed below are required to remain passing and are executed
 
 **DoD thresholds**
 - Signal-to-fill latency < 2 seconds
-- Broker connection active
-- Market/futures proxy stream receiving
+- Broker/data connectivity healthy for >= 60 minutes
+- Heartbeat gap <= 10 seconds
+- Live VWAP parity vs chart feed within 0.01%
+- Kill-switch close latency < 500ms
+- Broker connection active and market/futures proxy stream receiving
+- Phase 1 strategy importable/runnable inside live loop
 
 **Required tests to pass (TDD gate)**
 - ✅ `test_phase_2_execution_latency` (`tests/test_validators.py`)
 - ✅ `test_phase_2_rejects_latency_breach` (`tests/test_validators.py`)
 - ✅ `test_phase_2_rejects_disconnected_broker` (`tests/test_validators.py`)
 - ✅ `test_phase_2_rejects_stale_futures_stream` (`tests/test_validators.py`)
+- ✅ `test_phase_2_live_readiness` (`tests/test_validators.py`)
+- ✅ `test_phase_2_live_readiness_rejects_stale_heartbeat` (`tests/test_validators.py`)
+- ✅ `test_phase_2_live_readiness_rejects_kill_switch_latency` (`tests/test_validators.py`)
+- ✅ `test_on_bar_update_executes_order_when_phase_1_emits_buy` (`tests/test_live_engine.py`)
+- ✅ `test_check_stale_data_triggers_flatten` (`tests/test_live_engine.py`)
+- ✅ `test_phase_1_integration_happy_path` (`tests/test_live_engine.py`)
+- ✅ `test_phase_1_integration_rejects_shape_mismatch` (`tests/test_live_engine.py`)
 
 ### Phase 3 — Shawn Intelligence Layer
 **Objective**

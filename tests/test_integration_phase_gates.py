@@ -9,6 +9,7 @@ from catena_bot.validators import (
     ConnectionState,
     validate_phase_1_backtest,
     validate_phase_2_execution_latency,
+    validate_phase_2_live_readiness,
     validate_phase_3_shawn_logic_filter,
     validate_phase_4_safety_checks,
 )
@@ -32,6 +33,15 @@ class TestIntegrationPhaseGates(unittest.TestCase):
                 phase_2_logs,
                 ConnectionState(active=True, receiving=True),
                 ConnectionState(active=True, receiving=True),
+            )
+        )
+        self.assertTrue(
+            validate_phase_2_live_readiness(
+                connected_uptime_minutes=60,
+                heartbeat_gap_seconds=2,
+                vwap_delta_pct=0.00005,
+                kill_switch_close_ms=250,
+                phase_1_import_ok=True,
             )
         )
         self.assertTrue(validate_phase_3_shawn_logic_filter(phase_3_history))
