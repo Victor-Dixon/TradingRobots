@@ -44,8 +44,12 @@ All completed tests listed below are required to remain passing and are executed
 - Heartbeat gap <= 10 seconds
 - Live VWAP parity vs chart feed within 0.01%
 - Kill-switch close latency < 500ms
+- Handle-bar-to-order ("Shawn Speed") latency <= 500ms
 - Broker connection active and market/futures proxy stream receiving
 - Phase 1 strategy importable/runnable inside live loop
+- CSV-vs-live signal parity check to prevent "Ghost Signals"
+- Missing-bar data rows are sanitized (`dropna`) instead of crashing
+- TSLA long signals are vetoed when Nasdaq proxy momentum is in dump mode
 
 **Required tests to pass (TDD gate)**
 - ✅ `test_phase_2_execution_latency` (`tests/test_validators.py`)
@@ -59,6 +63,12 @@ All completed tests listed below are required to remain passing and are executed
 - ✅ `test_check_stale_data_triggers_flatten` (`tests/test_live_engine.py`)
 - ✅ `test_phase_1_integration_happy_path` (`tests/test_live_engine.py`)
 - ✅ `test_phase_1_integration_rejects_shape_mismatch` (`tests/test_live_engine.py`)
+- ✅ `test_on_bar_update_cancels_buy_when_nq_dumps` (`tests/test_live_engine.py`)
+- ✅ `test_on_bar_update_records_shawn_speed_under_threshold` (`tests/test_live_engine.py`)
+- ✅ `test_on_bar_update_skips_missing_data_rows` (`tests/test_live_engine.py`)
+- ✅ `test_compare_signal_parity_matches_batch_vs_live` (`tests/test_live_engine.py`)
+- ✅ `test_compare_signal_parity_rejects_ghost_signal_mismatch` (`tests/test_live_engine.py`)
+- ✅ `test_build_live_window_from_rows_drops_nan_rows` (`tests/test_live_engine.py`)
 
 ### Phase 3 — Shawn Intelligence Layer
 **Objective**
@@ -103,3 +113,11 @@ Run all unit + integration + e2e DoD tests:
 cd ci
 ./run_tests.sh
 ```
+
+## CI/CD Gate
+- CI workflow: `.github/workflows/ci.yml`
+  - Runs dependency installation.
+  - Enforces Python LOC `< 400`.
+  - Executes `./ci/run_tests.sh` as the merge gate.
+- CD workflow: `.github/workflows/cd.yml`
+  - Executes the same phased gate prior to artifact delivery.
