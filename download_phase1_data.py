@@ -1,9 +1,6 @@
-"""Backward-compatible wrapper.
+"""Compatibility wrapper for legacy phase-1 downloader entrypoint."""
 
-SSOT enforcement: `data_downloader.py` is the active data ingestion entry point.
-"""
-
-from data_downloader import main
+from catena_bot.data_downloader import main
 
 
 if __name__ == "__main__":
