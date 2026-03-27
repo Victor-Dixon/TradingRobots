@@ -30,7 +30,8 @@ TradingRobots/
 │   ├── test_e2e_phased_plan.py
 │   ├── test_mock_care_package.py   # Unit tests for architect mocked package
 │   ├── test_phase_status.py        # Unit tests for CI phase report + handoff prompt
-│   └── test_phase6_handoff_coverage.py # Phase-6 integration/UX-edge/e2e prompt-flow tests
+│   ├── test_phase6_handoff_coverage.py # Phase-6 integration/UX-edge/e2e prompt-flow tests
+│   └── test_phase7_maintenance.py  # Phase-7 maintenance metadata hardening tests
 ├── ci/
 │   └── run_tests.sh                # Unit + integration + e2e release gate
 ├── scripts/
@@ -95,6 +96,13 @@ Catena-Bot targets momentum scalps by combining:
   - Integration coverage verifies prompt generation and metadata freshness checks together.
   - User-experience edge-case coverage enforces read → complete task → next-day setup guidance in prompts.
   - E2E coverage validates deterministic prompt regeneration through CI phase-status reporting.
+
+### Phase 7 — Maintenance (Prompt Metadata Hardening)
+- Goal: Harden prompt metadata parsing/validation for deterministic handoff safety.
+- Success thresholds:
+  - Whitespace-only workflow IDs fallback to deterministic local IDs.
+  - Invalid timestamp metadata fails with explicit assertion messaging.
+  - Future timestamps beyond SSOT tolerance are rejected during freshness checks.
 
 ## TDD Validation Suite (First-Class)
 Validation logic is codified in:

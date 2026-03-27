@@ -34,6 +34,7 @@ class CatenaSSOT:
     architect_stop_loss_pct: float = 0.005
     architect_circuit_breaker_losses: int = 3
     architect_stale_data_seconds: int = 15
+    maintenance_prompt_max_future_skew_minutes: int = 1
     phase_order: tuple[str, ...] = (
         "Phase 1",
         "Phase 2",
@@ -41,6 +42,7 @@ class CatenaSSOT:
         "Phase 4",
         "Phase 5",
         "Phase 6",
+        "Phase 7",
     )
 
 
