@@ -14,8 +14,9 @@ Build a momentum-focused trading bot that can be validated in deterministic phas
 - Integration phased gates: [`tests/test_integration_phase_gates.py`](tests/test_integration_phase_gates.py)
 - E2E phased plan flow: [`tests/test_e2e_phased_plan.py`](tests/test_e2e_phased_plan.py)
 - Architect mocked package: [`tests/test_mock_care_package.py`](tests/test_mock_care_package.py)
+- CI phase status + handoff prompt tests: [`tests/test_phase_status.py`](tests/test_phase_status.py)
 
-All completed tests listed below are required to remain passing and are executed by `ci/run_tests.sh`.
+All completed tests listed below are required to remain passing and are executed by `ci/run_tests.sh`. The same gate also reports the current SSOT phase and writes `NEXT_AGENT_PROMPT.md` for deterministic agent handoff.
 
 ## Phased Plan and Definition of Done
 
@@ -132,6 +133,8 @@ All completed tests listed below are required to remain passing and are executed
 - ✅ `test_integration_fails_fast_when_any_phase_gate_fails` (`tests/test_integration_phase_gates.py`)
 - ✅ `test_e2e_nominal_phased_plan_passes` (`tests/test_e2e_phased_plan.py`)
 - ✅ `test_e2e_pipeline_stops_on_phase_4_safety_failure` (`tests/test_e2e_phased_plan.py`)
+- ✅ `test_evaluate_phase_completion_marks_only_contiguous_gates_complete` (`tests/test_phase_status.py`)
+- ✅ `test_write_next_agent_prompt_persists_expected_text` (`tests/test_phase_status.py`)
 
 ## Test Command
 Run all unit + integration + e2e DoD tests:
