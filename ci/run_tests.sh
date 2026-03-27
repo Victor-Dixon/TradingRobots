@@ -22,3 +22,12 @@ python -m unittest tests.test_e2e_phased_plan -v
 
 echo "[unit] Running architect mocked care package tests"
 python -m unittest tests.test_mock_care_package -v
+
+echo "[unit] Running CI phase status + handoff prompt tests"
+python -m unittest tests.test_phase_status -v
+
+echo "[meta] Reporting completed SSOT phase and generating NEXT_AGENT_PROMPT.md"
+python -m catena_bot.phase_status
+
+echo "[meta] Handoff prompt emitted for this workflow:"
+cat NEXT_AGENT_PROMPT.md

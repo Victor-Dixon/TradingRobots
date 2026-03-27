@@ -20,19 +20,22 @@ TradingRobots/
 │   ├── data_downloader.py          # Phase-1 data ingestion implementation
 │   ├── live_engine.py              # Phase-2 live stream + heartbeat orchestration
 │   ├── integration_validator.py    # Phase-1/Phase-2 compatibility checks
-│   └── mock_care_package.py        # Phase-5 architect mocking package
+│   ├── mock_care_package.py        # Phase-5 architect mocking package
+│   └── phase_status.py             # CI phase reporter + next-agent prompt writer
 ├── tests/
 │   ├── test_validators.py          # Unit tests for all phase gates
 │   ├── test_live_engine.py         # Unit tests for live execution integration
 │   ├── test_data_downloader.py    # Unit tests for offline data acquisition logic
 │   ├── test_integration_phase_gates.py
 │   ├── test_e2e_phased_plan.py
-│   └── test_mock_care_package.py   # Unit tests for architect mocked package
+│   ├── test_mock_care_package.py   # Unit tests for architect mocked package
+│   └── test_phase_status.py        # Unit tests for CI phase report + handoff prompt
 ├── ci/
 │   └── run_tests.sh                # Unit + integration + e2e release gate
 ├── scripts/
 │   └── setup_env.sh
 ├── PRD.md                          # Phased plan + DoD test matrix
+├── NEXT_AGENT_PROMPT.md            # Generated deterministic handoff prompt
 ├── AGENTS.md                       # Agent guardrails for SSOT/TDD/phase expansion
 ├── data_downloader.py              # Compatibility wrapper
 └── download_phase1_data.py         # Compatibility wrapper
@@ -95,6 +98,8 @@ Validation logic is codified in:
 For each phase, both happy-path and boundary/failure tests must pass before marking the phase complete.
 
 `ci/run_tests.sh` is the release gate and runs unit, integration, and e2e tests that map to the phased DoD plan.
+
+`ci/run_tests.sh` also prints the current SSOT phase completion, rewrites `NEXT_AGENT_PROMPT.md` every run, validates fresh metadata (`Generated at`, `Git SHA`, `Workflow ID`), and echoes the prompt body in CI logs for handoff visibility.
 
 ## Data Scraper (Phase 1)
 `catena_bot/data_downloader.py` is the active scraper (root scripts are compatibility wrappers).

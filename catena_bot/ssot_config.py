@@ -34,6 +34,13 @@ class CatenaSSOT:
     architect_stop_loss_pct: float = 0.005
     architect_circuit_breaker_losses: int = 3
     architect_stale_data_seconds: int = 15
+    phase_order: tuple[str, ...] = (
+        "Phase 1",
+        "Phase 2",
+        "Phase 3",
+        "Phase 4",
+        "Phase 5",
+    )
 
 
 SSOT = CatenaSSOT()
