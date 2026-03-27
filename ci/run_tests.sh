@@ -29,6 +29,9 @@ python -m unittest tests.test_phase_status -v
 echo "[phase-6] Running handoff coverage integration/ux/e2e tests"
 python -m unittest tests.test_phase6_handoff_coverage -v
 
+echo "[phase-7] Running maintenance metadata hardening tests"
+python -m unittest tests.test_phase7_maintenance -v
+
 echo "[meta] Reporting completed SSOT phase and generating NEXT_AGENT_PROMPT.md"
 python -m catena_bot.phase_status
 

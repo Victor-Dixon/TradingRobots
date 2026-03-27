@@ -55,7 +55,8 @@ def current_git_sha() -> str:
 def current_workflow_id() -> str:
     """Resolve workflow id; fallback to deterministic local marker."""
 
-    return os.getenv("GITHUB_RUN_ID") or f"local-{os.getpid()}"
+    env_workflow_id = (os.getenv("GITHUB_RUN_ID") or "").strip()
+    return env_workflow_id or f"local-{os.getpid()}"
 
 
 def build_next_agent_prompt(
@@ -149,10 +150,15 @@ def validate_prompt_freshness(
         metadata["workflow_id"] == expected_workflow_id
     ), "Workflow ID mismatch: prompt was not generated in this workflow run."
 
-    generated_at = datetime.fromisoformat(metadata["generated_at_utc"])
+    try:
+        generated_at = datetime.fromisoformat(metadata["generated_at_utc"])
+    except ValueError as exc:
+        raise AssertionError("Invalid generated-at timestamp format in NEXT_AGENT_PROMPT.md.") from exc
     if generated_at.tzinfo is None:
         generated_at = generated_at.replace(tzinfo=timezone.utc)
     allowed_age = timedelta(minutes=max_age_minutes)
+    max_future_skew = timedelta(minutes=SSOT.maintenance_prompt_max_future_skew_minutes)
+    assert generated_at <= now_utc + max_future_skew, "NEXT_AGENT_PROMPT.md generated-at timestamp is in the future."
     assert now_utc - generated_at <= allowed_age, "NEXT_AGENT_PROMPT.md is stale for this workflow run."
 
 

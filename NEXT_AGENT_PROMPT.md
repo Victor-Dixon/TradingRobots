@@ -1,13 +1,13 @@
 # NEXT AGENT PROMPT
 
 You are continuing Catena-Bot in a human-in-the-loop, agentic coding workflow.
-Current completed phase: Phase 6
+Current completed phase: Phase 7
 Target next phase: Maintenance
 
 Prompt freshness metadata (must match current workflow):
-- Generated at (UTC): 2026-03-27T15:05:34.695366+00:00
-- Git SHA: 801cdb6f93f1
-- Workflow ID: local-5677
+- Generated at (UTC): 2026-03-27T16:04:45.920177+00:00
+- Git SHA: 9314579913ff
+- Workflow ID: local-6842
 
 Required operating constraints:
 1) Treat README.md, PRD.md, and catena_bot/ssot_config.py as SSOT.

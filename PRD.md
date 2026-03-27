@@ -16,6 +16,7 @@ Build a momentum-focused trading bot that can be validated in deterministic phas
 - Architect mocked package: [`tests/test_mock_care_package.py`](tests/test_mock_care_package.py)
 - CI phase status + handoff prompt tests: [`tests/test_phase_status.py`](tests/test_phase_status.py)
 - Phase-6 handoff coverage tests: [`tests/test_phase6_handoff_coverage.py`](tests/test_phase6_handoff_coverage.py)
+- Phase-7 maintenance hardening tests: [`tests/test_phase7_maintenance.py`](tests/test_phase7_maintenance.py)
 
 All completed tests listed below are required to remain passing and are executed by `ci/run_tests.sh`. The same gate also reports the current SSOT phase, rewrites `NEXT_AGENT_PROMPT.md` each run, and enforces fresh prompt metadata (`Generated at`, `Git SHA`, `Workflow ID`) to prevent stale handoff files.
 
@@ -146,6 +147,20 @@ All completed tests listed below are required to remain passing and are executed
 - ✅ `test_phase_6_integration_prompt_write_and_freshness` (`tests/test_phase6_handoff_coverage.py`)
 - ✅ `test_phase_6_e2e_report_ci_phase_status_writes_fresh_prompt` (`tests/test_phase6_handoff_coverage.py`)
 
+### Phase 7 — Maintenance (Prompt Metadata Hardening)
+**Objective**
+- Strengthen handoff prompt metadata handling so CI prompt freshness checks fail fast on malformed or suspicious metadata.
+
+**DoD thresholds**
+- Blank `GITHUB_RUN_ID` values are sanitized and fallback to deterministic local workflow IDs.
+- Invalid `Generated at (UTC)` metadata fails validation with explicit assertion messaging.
+- Future-dated prompt timestamps beyond SSOT skew tolerance are rejected.
+
+**Required tests to pass (TDD gate)**
+- ✅ `test_current_workflow_id_falls_back_when_env_blank` (`tests/test_phase7_maintenance.py`)
+- ✅ `test_validate_prompt_freshness_rejects_invalid_timestamp_format` (`tests/test_phase7_maintenance.py`)
+- ✅ `test_validate_prompt_freshness_rejects_future_timestamp` (`tests/test_phase7_maintenance.py`)
+
 ## Cross-Phase Integration and E2E Coverage
 - ✅ `test_integration_all_phase_gates_pass` (`tests/test_integration_phase_gates.py`)
 - ✅ `test_integration_fails_fast_when_any_phase_gate_fails` (`tests/test_integration_phase_gates.py`)
@@ -159,6 +174,9 @@ All completed tests listed below are required to remain passing and are executed
 - ✅ `test_phase_6_prompt_contains_required_process_steps` (`tests/test_phase6_handoff_coverage.py`)
 - ✅ `test_phase_6_integration_prompt_write_and_freshness` (`tests/test_phase6_handoff_coverage.py`)
 - ✅ `test_phase_6_e2e_report_ci_phase_status_writes_fresh_prompt` (`tests/test_phase6_handoff_coverage.py`)
+- ✅ `test_current_workflow_id_falls_back_when_env_blank` (`tests/test_phase7_maintenance.py`)
+- ✅ `test_validate_prompt_freshness_rejects_invalid_timestamp_format` (`tests/test_phase7_maintenance.py`)
+- ✅ `test_validate_prompt_freshness_rejects_future_timestamp` (`tests/test_phase7_maintenance.py`)
 
 ## Test Command
 Run all unit + integration + e2e DoD tests:
