@@ -28,3 +28,6 @@ python -m unittest tests.test_phase_status -v
 
 echo "[meta] Reporting completed SSOT phase and generating NEXT_AGENT_PROMPT.md"
 python -m catena_bot.phase_status
+
+echo "[meta] Handoff prompt emitted for this workflow:"
+cat NEXT_AGENT_PROMPT.md

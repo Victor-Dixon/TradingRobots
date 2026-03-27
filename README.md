@@ -99,7 +99,7 @@ For each phase, both happy-path and boundary/failure tests must pass before mark
 
 `ci/run_tests.sh` is the release gate and runs unit, integration, and e2e tests that map to the phased DoD plan.
 
-`ci/run_tests.sh` also prints the current SSOT phase completion and writes `NEXT_AGENT_PROMPT.md` so the next agent has a deterministic handoff prompt for human-in-the-loop development.
+`ci/run_tests.sh` also prints the current SSOT phase completion, rewrites `NEXT_AGENT_PROMPT.md` every run, validates fresh metadata (`Generated at`, `Git SHA`, `Workflow ID`), and echoes the prompt body in CI logs for handoff visibility.
 
 ## Data Scraper (Phase 1)
 `catena_bot/data_downloader.py` is the active scraper (root scripts are compatibility wrappers).
