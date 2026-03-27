@@ -8,6 +8,9 @@ cd "$REPO_ROOT"
 echo "[unit] Running validator unit tests"
 python -m unittest tests.test_validators -v
 
+echo "[unit] Running live engine unit tests"
+python -m unittest tests.test_live_engine -v
+
 echo "[integration] Running phased gate integration tests"
 python -m unittest tests.test_integration_phase_gates -v
 

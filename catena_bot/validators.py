@@ -48,6 +48,30 @@ def validate_phase_2_execution_latency(
     return True
 
 
+def validate_phase_2_live_readiness(
+    *,
+    connected_uptime_minutes: int,
+    heartbeat_gap_seconds: int,
+    vwap_delta_pct: float,
+    kill_switch_close_ms: int,
+    phase_1_import_ok: bool,
+) -> bool:
+    assert (
+        connected_uptime_minutes >= SSOT.phase_2_required_uptime_minutes
+    ), "Broker/data connectivity did not remain healthy for the required uptime window."
+    assert (
+        heartbeat_gap_seconds <= SSOT.phase_2_max_heartbeat_gap_seconds
+    ), "Stale heartbeat detected for the live stream."
+    assert (
+        abs(vwap_delta_pct) <= SSOT.phase_2_vwap_parity_tolerance_pct
+    ), "Live VWAP parity deviates beyond 0.01%."
+    assert (
+        kill_switch_close_ms < SSOT.phase_2_kill_switch_max_close_ms
+    ), "Kill switch close-out exceeded 500ms safety threshold."
+    assert phase_1_import_ok, "Phase 1 strategy logic is not importable in the live loop."
+    return True
+
+
 def validate_phase_3_shawn_logic_filter(trade_history: Iterable[Mapping[str, float]]) -> bool:
     for trade in trade_history:
         assert trade["stock_rel_strength"] > trade["market_momentum"], "Bot entered a weak stock."

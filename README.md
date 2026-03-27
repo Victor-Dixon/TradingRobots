@@ -15,8 +15,11 @@ TradingRobots/
 │   ├── ssot_config.py              # Central thresholds/config constants
 │   ├── validators.py               # Phase DoD validation logic
 │   └── data_downloader.py          # Phase-1 data ingestion implementation
+│   ├── live_engine.py              # Phase-2 live stream + heartbeat orchestration
+│   └── integration_validator.py    # Phase-1/Phase-2 compatibility checks
 ├── tests/
 │   ├── test_validators.py          # Unit tests for all phase gates
+│   ├── test_live_engine.py         # Unit tests for live execution integration
 │   ├── test_integration_phase_gates.py
 │   └── test_e2e_phased_plan.py
 ├── ci/
@@ -46,7 +49,13 @@ Catena-Bot targets momentum scalps by combining:
 
 ### Phase 2 — Execution Engine (Paper)
 - Goal: Stable market-data + broker connectivity with low latency.
-- Success threshold: Signal-to-fill latency < 2 seconds.
+- Success thresholds:
+  - Signal-to-fill latency < 2 seconds.
+  - Connectivity uptime >= 60 minutes.
+  - Heartbeat gap <= 10 seconds.
+  - VWAP parity drift <= 0.01%.
+  - Kill-switch close-out < 500ms.
+  - Phase 1 strategy importable inside live loop.
 
 ### Phase 3 — Shawn Intelligence Layer
 - Goal: Enforce Relative Strength + VWAP compression filters.

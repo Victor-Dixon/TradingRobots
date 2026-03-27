@@ -9,6 +9,7 @@ from catena_bot.validators import (
     ConnectionState,
     validate_phase_1_backtest,
     validate_phase_2_execution_latency,
+    validate_phase_2_live_readiness,
     validate_phase_3_shawn_logic_filter,
     validate_phase_4_safety_checks,
 )
@@ -103,6 +104,37 @@ class TestPhase2Validator(unittest.TestCase):
         futures = ConnectionState(active=True, receiving=False)
         with self.assertRaisesRegex(AssertionError, "Nasdaq Futures data feed is lagging"):
             validate_phase_2_execution_latency(logs, broker, futures)
+
+    def test_phase_2_live_readiness(self) -> None:
+        self.assertTrue(
+            validate_phase_2_live_readiness(
+                connected_uptime_minutes=60,
+                heartbeat_gap_seconds=5,
+                vwap_delta_pct=0.00009,
+                kill_switch_close_ms=420,
+                phase_1_import_ok=True,
+            )
+        )
+
+    def test_phase_2_live_readiness_rejects_stale_heartbeat(self) -> None:
+        with self.assertRaisesRegex(AssertionError, "Stale heartbeat detected"):
+            validate_phase_2_live_readiness(
+                connected_uptime_minutes=60,
+                heartbeat_gap_seconds=11,
+                vwap_delta_pct=0.00009,
+                kill_switch_close_ms=420,
+                phase_1_import_ok=True,
+            )
+
+    def test_phase_2_live_readiness_rejects_kill_switch_latency(self) -> None:
+        with self.assertRaisesRegex(AssertionError, "Kill switch close-out exceeded"):
+            validate_phase_2_live_readiness(
+                connected_uptime_minutes=60,
+                heartbeat_gap_seconds=5,
+                vwap_delta_pct=0.00009,
+                kill_switch_close_ms=500,
+                phase_1_import_ok=True,
+            )
 
 
 class TestPhase3Validator(unittest.TestCase):
