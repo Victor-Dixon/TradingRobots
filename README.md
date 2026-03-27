@@ -63,7 +63,8 @@ export APCA_API_SECRET_KEY="your_secret"
 ## Run
 ```bash
 python data_downloader.py --ticker TSLA --nq-symbol QQQ --days 30
-python -m unittest discover -s tests -p 'test_*.py'
+cd ci
+./run_tests.sh
 ```
 
 ## Definition of Done (DoD)
