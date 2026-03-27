@@ -1,28 +1,74 @@
-# TradingRobots - Quant Pipeline Bootstrap
+# Catena-Bot (Shawn Momentum Engine)
 
-This repository now starts with **Phase 1 data infrastructure**.
+Version: **1.0.0-MVP**
 
-## Single Source of Truth (SSOT)
-`download_phase1_data.py` is the SSOT for minute-bar ingestion used by the backtesting pipeline.
+This README is the **project SSOT** for architecture, safety rails, and Definition of Done.
 
-## What it does
-- Downloads the last N days of 1-minute bars from Alpaca.
-- Pulls data for:
-  - `TSLA`
-  - an `/NQ` proxy (default `QQQ`, configurable via CLI)
-- Adds slippage metadata (`0.05%` default = `5` bps) for downstream VectorBT simulation.
-- Writes parquet + CSV + `manifest.json` under `data/phase1`.
+## Strategy Overview
+Catena-Bot targets momentum scalps by combining:
+- VWAP compression/breakout behavior
+- MACD curl/crossover timing
+- Relative strength of target stock vs. Nasdaq proxy (`/NQ` proxy symbol)
 
-## Setup
+## Phased Architecture
+### Phase 1 — Quant Foundation (Backtesting)
+- Goal: Validate expectancy on 1-minute historical data.
+- Success thresholds:
+  - Win Rate > 45%
+  - Profit Factor > 1.2
+  - Max Drawdown < 15%
+  - Sharpe Ratio > 1.5
+
+### Phase 2 — Execution Engine (Paper)
+- Goal: Stable market-data + broker connectivity with low latency.
+- Success threshold: Signal-to-fill latency < 2 seconds.
+
+### Phase 3 — Shawn Intelligence Layer
+- Goal: Enforce Relative Strength + VWAP compression filters.
+- Success threshold: Strict filter compliance for all entries.
+
+### Phase 4 — Safety and Over-Engineering
+- Circuit Breaker: Halt trading at -2% daily PnL.
+- Stale Data Guard: Trigger safety action if feed is stale > 5s.
+- Double Entry Guard: Prevent duplicate entries for same signal.
+- Wash-Sale Cooldown: Prevent immediate revenge re-entry after a loss.
+
+## TDD Validation Suite (First-Class)
+Validation logic is codified in:
+- `catena_bot/validators.py`
+- `tests/test_validators.py`
+
+## Data Scraper (Phase 1)
+`data_downloader.py` is the active scraper.
+- Pulls last `N` days of 1-minute bars for ticker + `/NQ` proxy.
+- Saves parquet + CSV + `manifest.json` under `data/phase1`.
+- Includes slippage metadata for backtest simulation.
+
+Backward compatibility:
+- `download_phase1_data.py` is a wrapper that calls `data_downloader.py`.
+
+## Environment Setup
 ```bash
-python -m pip install alpaca-py pandas pyarrow
-export APCA_API_KEY_ID="..."
-export APCA_API_SECRET_KEY="..."
+bash scripts/setup_env.sh
+source .venv/bin/activate
+cp .env.example .env
+```
+
+Set environment variables:
+```bash
+export APCA_API_KEY_ID="your_key"
+export APCA_API_SECRET_KEY="your_secret"
 ```
 
 ## Run
 ```bash
-python download_phase1_data.py --days 30 --tsla-symbol TSLA --nq-symbol QQQ
+python data_downloader.py --ticker TSLA --nq-symbol QQQ --days 30
+python -m unittest discover -s tests -p 'test_*.py'
 ```
 
-> Note: If your Alpaca account supports futures market data, you can pass your preferred futures symbol via `--nq-symbol`.
+## Definition of Done (DoD)
+A phase is done only when:
+- Code is modular and symbol-swappable via one argument.
+- Validation tests are passing.
+- Bot decisions are loggable to `bot_history.log` in runtime layers.
+- Error handling and reconnect logic are covered before live capital.
