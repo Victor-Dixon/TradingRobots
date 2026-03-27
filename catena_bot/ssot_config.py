@@ -40,6 +40,7 @@ class CatenaSSOT:
         "Phase 3",
         "Phase 4",
         "Phase 5",
+        "Phase 6",
     )
 
 

@@ -26,6 +26,9 @@ python -m unittest tests.test_mock_care_package -v
 echo "[unit] Running CI phase status + handoff prompt tests"
 python -m unittest tests.test_phase_status -v
 
+echo "[phase-6] Running handoff coverage integration/ux/e2e tests"
+python -m unittest tests.test_phase6_handoff_coverage -v
+
 echo "[meta] Reporting completed SSOT phase and generating NEXT_AGENT_PROMPT.md"
 python -m catena_bot.phase_status
 

@@ -29,7 +29,8 @@ TradingRobots/
 │   ├── test_integration_phase_gates.py
 │   ├── test_e2e_phased_plan.py
 │   ├── test_mock_care_package.py   # Unit tests for architect mocked package
-│   └── test_phase_status.py        # Unit tests for CI phase report + handoff prompt
+│   ├── test_phase_status.py        # Unit tests for CI phase report + handoff prompt
+│   └── test_phase6_handoff_coverage.py # Phase-6 integration/UX-edge/e2e prompt-flow tests
 ├── ci/
 │   └── run_tests.sh                # Unit + integration + e2e release gate
 ├── scripts/
@@ -87,6 +88,13 @@ Catena-Bot targets momentum scalps by combining:
   - Shawn squeeze requires `dist_to_vwap < 0.002`.
   - Circuit breaker shuts down bot after 3 consecutive -0.5% stop losses.
   - Stale stream panic closes all positions after 15 seconds without bars.
+
+### Phase 6 — Test Coverage Improvement (Integration + UX Edge Cases + E2E)
+- Goal: Improve coverage quality around agent handoff process reliability and user-facing workflow clarity.
+- Success thresholds:
+  - Integration coverage verifies prompt generation and metadata freshness checks together.
+  - User-experience edge-case coverage enforces read → complete task → next-day setup guidance in prompts.
+  - E2E coverage validates deterministic prompt regeneration through CI phase-status reporting.
 
 ## TDD Validation Suite (First-Class)
 Validation logic is codified in:

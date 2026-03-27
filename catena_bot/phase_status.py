@@ -87,8 +87,10 @@ def build_next_agent_prompt(
             "2) Lead with TDD and keep every Python file under 400 LOC.",
             "3) Keep ci/run_tests.sh wired to all completed tests.",
             "",
-            "First action:",
-            "- Run ./ci/run_tests.sh and confirm the same or higher phase completion before coding.",
+            "Execution process for this run:",
+            "1) Read NEXT_AGENT_PROMPT.md before coding and restate the task you are completing.",
+            "2) Complete one scoped task for the target next phase with tests first (TDD).",
+            "3) Set up the next day handoff by rerunning ./ci/run_tests.sh and committing refreshed prompt metadata.",
         ]
     )
 
