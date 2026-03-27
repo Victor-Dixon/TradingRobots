@@ -16,3 +16,6 @@ python -m unittest tests.test_integration_phase_gates -v
 
 echo "[e2e] Running phased plan e2e tests"
 python -m unittest tests.test_e2e_phased_plan -v
+
+echo "[unit] Running architect mocked care package tests"
+python -m unittest tests.test_mock_care_package -v
