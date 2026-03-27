@@ -17,14 +17,17 @@ TradingRobots/
 │   ├── __init__.py
 │   ├── ssot_config.py              # Central thresholds/config constants
 │   ├── validators.py               # Phase DoD validation logic
-│   └── data_downloader.py          # Phase-1 data ingestion implementation
+│   ├── data_downloader.py          # Phase-1 data ingestion implementation
 │   ├── live_engine.py              # Phase-2 live stream + heartbeat orchestration
-│   └── integration_validator.py    # Phase-1/Phase-2 compatibility checks
+│   ├── integration_validator.py    # Phase-1/Phase-2 compatibility checks
+│   └── mock_care_package.py        # Phase-5 architect mocking package
 ├── tests/
 │   ├── test_validators.py          # Unit tests for all phase gates
 │   ├── test_live_engine.py         # Unit tests for live execution integration
+│   ├── test_data_downloader.py    # Unit tests for offline data acquisition logic
 │   ├── test_integration_phase_gates.py
-│   └── test_e2e_phased_plan.py
+│   ├── test_e2e_phased_plan.py
+│   └── test_mock_care_package.py   # Unit tests for architect mocked package
 ├── ci/
 │   └── run_tests.sh                # Unit + integration + e2e release gate
 ├── scripts/
@@ -74,10 +77,19 @@ Catena-Bot targets momentum scalps by combining:
 - Double Entry Guard: Prevent duplicate entries for same signal.
 - Wash-Sale Cooldown: Prevent immediate revenge re-entry after a loss.
 
+### Phase 5 — Architect Mocked Care Package
+- Goal: Provide deterministic synthetic Shawn scenarios and mock broker fills with zero external dependencies.
+- Success thresholds:
+  - Futures-lead bearish condition blocks entries.
+  - Shawn squeeze requires `dist_to_vwap < 0.002`.
+  - Circuit breaker shuts down bot after 3 consecutive -0.5% stop losses.
+  - Stale stream panic closes all positions after 15 seconds without bars.
+
 ## TDD Validation Suite (First-Class)
 Validation logic is codified in:
 - `catena_bot/validators.py`
 - `tests/test_validators.py`
+- `tests/test_data_downloader.py`
 - `PRD.md` (phase-by-phase required test gates)
 
 For each phase, both happy-path and boundary/failure tests must pass before marking the phase complete.

@@ -9,9 +9,11 @@ Build a momentum-focused trading bot that can be validated in deterministic phas
 
 ## Test Navigation Index (Phase -> Test File)
 - Unit DoD gates: [`tests/test_validators.py`](tests/test_validators.py)
+- Phase-1 data acquisition unit tests: [`tests/test_data_downloader.py`](tests/test_data_downloader.py)
 - Phase-2 live engine unit tests: [`tests/test_live_engine.py`](tests/test_live_engine.py)
 - Integration phased gates: [`tests/test_integration_phase_gates.py`](tests/test_integration_phase_gates.py)
 - E2E phased plan flow: [`tests/test_e2e_phased_plan.py`](tests/test_e2e_phased_plan.py)
+- Architect mocked package: [`tests/test_mock_care_package.py`](tests/test_mock_care_package.py)
 
 All completed tests listed below are required to remain passing and are executed by `ci/run_tests.sh`.
 
@@ -33,6 +35,9 @@ All completed tests listed below are required to remain passing and are executed
 - ✅ `test_phase_1_backtest_rejects_low_profit_factor` (`tests/test_validators.py`)
 - ✅ `test_phase_1_backtest_rejects_high_drawdown` (`tests/test_validators.py`)
 - ✅ `test_phase_1_backtest_rejects_low_sharpe` (`tests/test_validators.py`)
+- ✅ `test_env_raises_when_missing` (`tests/test_data_downloader.py`)
+- ✅ `test_fetch_stock_normalizes_columns_and_sorts` (`tests/test_data_downloader.py`)
+- ✅ `test_save_writes_symbol_files_and_slippage_columns` (`tests/test_data_downloader.py`)
 
 ### Phase 2 — Execution Engine (Paper)
 **Objective**
@@ -99,6 +104,28 @@ All completed tests listed below are required to remain passing and are executed
 - ✅ `test_phase_4_rejects_stale_data` (`tests/test_validators.py`)
 - ✅ `test_phase_4_rejects_double_entry` (`tests/test_validators.py`)
 - ✅ `test_phase_4_rejects_wash_sale_cooldown` (`tests/test_validators.py`)
+
+
+### Phase 5 — Architect Mocked Care Package
+**Objective**
+- Provide an offline deterministic simulation package so Shawn logic, broker actions, and safety rails can be validated without live keys or feeds.
+
+**DoD thresholds**
+- Zero external dependencies for mocked tests
+- 100% branch coverage in `is_shawn_setup` decision function
+- Human-readable logs for refusal/acceptance and safety-trigger outcomes
+- Futures-lead bearish market blocks trade
+- Shawn squeeze rejects entries with `dist_to_vwap >= 0.002`
+- Circuit breaker halts after 3 consecutive losses at or below -0.5% each
+- Stale data panic emergency-closes positions at 15 seconds without bars
+
+**Required tests to pass (TDD gate)**
+- ✅ `test_generate_mock_shawn_setup_breakout_has_late_volume_spike` (`tests/test_mock_care_package.py`)
+- ✅ `test_a_futures_lead_logic_blocks_trade` (`tests/test_mock_care_package.py`)
+- ✅ `test_b_shawn_squeeze_accuracy_blocks_chasing_trade` (`tests/test_mock_care_package.py`)
+- ✅ `test_c_circuit_breaker_triggers_shutdown_after_three_losses` (`tests/test_mock_care_package.py`)
+- ✅ `test_d_stale_data_panic_emergency_closes` (`tests/test_mock_care_package.py`)
+- ✅ `test_branch_coverage_for_is_shawn_setup` (`tests/test_mock_care_package.py`)
 
 ## Cross-Phase Integration and E2E Coverage
 - ✅ `test_integration_all_phase_gates_pass` (`tests/test_integration_phase_gates.py`)

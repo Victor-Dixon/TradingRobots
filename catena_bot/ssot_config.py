@@ -29,6 +29,11 @@ class CatenaSSOT:
     phase_4_daily_loss_limit_pct: float = 0.02
     phase_4_stale_data_seconds: int = 5
     phase_4_reentry_cooldown_minutes: int = 30
+    architect_max_dist_to_vwap: float = 0.002
+    architect_min_futures_momentum: float = 0.0
+    architect_stop_loss_pct: float = 0.005
+    architect_circuit_breaker_losses: int = 3
+    architect_stale_data_seconds: int = 15
 
 
 SSOT = CatenaSSOT()
