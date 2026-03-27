@@ -21,6 +21,7 @@ TradingRobots/
 ├── tests/
 │   ├── test_validators.py          # Unit tests for all phase gates
 │   ├── test_live_engine.py         # Unit tests for live execution integration
+│   ├── test_data_downloader.py    # Unit tests for offline data acquisition logic
 │   ├── test_integration_phase_gates.py
 │   ├── test_e2e_phased_plan.py
 │   └── test_mock_care_package.py   # Unit tests for architect mocked package
@@ -81,6 +82,7 @@ Catena-Bot targets momentum scalps by combining:
 Validation logic is codified in:
 - `catena_bot/validators.py`
 - `tests/test_validators.py`
+- `tests/test_data_downloader.py`
 - `PRD.md` (phase-by-phase required test gates)
 
 For each phase, both happy-path and boundary/failure tests must pass before marking the phase complete.
