@@ -55,7 +55,11 @@ Catena-Bot targets momentum scalps by combining:
   - Heartbeat gap <= 10 seconds.
   - VWAP parity drift <= 0.01%.
   - Kill-switch close-out < 500ms.
+  - Handle-bar-to-order ("Shawn Speed") <= 500ms.
   - Phase 1 strategy importable inside live loop.
+  - CSV/live signal parity required to block "Ghost Signals."
+  - Missing bar fields are sanitized (`dropna`) before strategy evaluation.
+  - Long entries are vetoed when Nasdaq proxy momentum dumps.
 
 ### Phase 3 — Shawn Intelligence Layer
 - Goal: Enforce Relative Strength + VWAP compression filters.
